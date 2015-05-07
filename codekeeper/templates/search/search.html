@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-8">
+        <form role="form" id="search-form" action="/search" method="get">
+            <div class="form-group">
+                <input class="form-control" type="text" name="q" id="search-input" />
+            </div>
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+
+        <h3>Results</h3>
+        {% include "search/search_results.html" %}
+
+    </div>
+    <div class="col-md-4">
+        {% if content.facets %}
+        <h2>Facets</h2>
+        {% for r, values in content.facets.items %}
+        <div class="row">
+            <h4>{{ r }}</h4>
+            <ul>
+                {% for x, facet in values %}
+                <li><a class="facet-link" href="#" data-facet-name="{{ r }}" data-facet-value="{{ x }}">{{ x }} ({{facet}})</a></li>
+
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript">
+    window.addEventListener('load', function ()
+    {
+        // this code manages what happens when a facet link is clicked.
+        $(".facet-link").on('click', function(event)
+        {
+            var qstr = window.location.search.replace("?", "");
+            var qstr_params = $.parseParams(qstr);
+
+            var facetName = $(this).data('facet-name');
+            var facetValue = $(this).data('facet-value');
+            if (!(facetName in qstr_params))
+            {
+                var facetQ = facetName + "=" + facetValue;
+                if (qstr != "")
+                {
+                    // this makes sure that we either append the
+                    // querystring to an existing query string
+                    // (with a "&") or we just append it to the
+                    // existing URL.
+                    facetQ = "&" + facetQ;
+                }
+
+                window.location.search = qstr + facetQ;
+            }
+            event.preventDefault();
+        });
+    });
+</script>
+{% endblock %}

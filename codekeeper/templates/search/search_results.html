@@ -1,0 +1,27 @@
+
+
+{% if content.results %}
+<div class="list-group">
+    {% for r in content.results %}
+    {% if r.type == "snippet" %}
+    <a href="/snippet/{{ r.item_id }}" class="list-group-item">
+        <span class="label label-primary pull-right">Snippet</span>
+        <h4>{{ r.title }}</h4>
+    </a>
+    {% elif r.type == "person" %}
+    <a href="/person/{{ r.item_id }}" class="list-group-item">
+        <span class="label label-success pull-right">Person</span>
+        <h4>{{ r.last_name }}, {{ r.first_name }}</h4>
+    </a>
+    {% elif r.type == "tag" %}
+    <a href="/tag/{{ r.item_id }}" class="list-group-item">
+        <span class="label label-info pull-right">Tag</span>
+        <h4>{{ r.title }}</h4>
+        <p class="list-group-item-text"></p>
+    </a>
+    {% endif %}
+    {% endfor %}
+</div>
+{% else %}
+<h5>No Results found.</h5>
+{% endif %}
